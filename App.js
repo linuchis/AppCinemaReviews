@@ -1,46 +1,60 @@
-import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
-import { getLatestGames } from './lib/metacritic';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 
-export default function App() {
+const App = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getLatestGames().then((games) => {
-      setGames(games);
-    });
+    fetch('https://internal-prod.apigee.fandom.net/v1/xapi/composer/metacritic/pages/games-critic-reviews/elden-ring/platform/playstation-5/web?filter=all&sort=score&apiKey=1MOZgmNFxvmljaQR1X9KAij9Mo4xAY3u')
+      .then((response) => response.json())
+      .then((json) => {
+        setData(json.data);
+        setLoading(false);
+      })
+      .catch((error) => console.error(error));
   }, []);
 
-  const [games, setGames] = useState([]);
-
-
-
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
-
-      {games.map((game) => (
-        <View key ={games.slug} style = {styles.card}>
-          <Image
-          source={{ uri: games.image }}
-          style={{
-            width: 107,
-            height:147,
-            borderRadius: 10,
-          }}
-          />
-        </View>
-      ))}
+      <FlatList
+        data={data}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text>{item.description}</Text>
+          </View>
+        )}
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#66f',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff111',
+  },
+  item: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
+
+export default App;
