@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, Image, StyleSheet } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View, Image, StyleSheet, KeyboardAvoidingView, Platform, TextInput, Touchable, TouchableOpacity } from 'react-native';
 import Task from './components/Task';
 import { LinearGradient } from 'expo-linear-gradient';
 import { getMovies } from './services/MetacriticMovies';
@@ -36,11 +36,45 @@ const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject, // Para hacer que el LinearGradient ocupe toda la pantalla
   },
+  writeTaskWrapper:{
+    position: 'absolute',
+    bottom: 60,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+
+  input:{
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    backgroundColor: "#FFF",
+    borderRadius: 60,
+    boderColor: "#565656",
+    borderWidth: 1,
+    width: 250,
+  },
+
+  addWrapper:{
+    width: 60,
+    height: 60,
+    backgroundColor: '#ffffff',
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#565656',
+    borderWidth: 2,
+  },
+  addText:{
+
+
+  },
 });
 
 const App = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [task, setTask] = useState();
 
 
 
@@ -70,10 +104,35 @@ const App = () => {
             {/* las tareas van acá*/}
             <Task text={'Task 1'} />
             <Task text={'Task 2'} />
-            <Task text={'Task 3'} />
           </View>
         </View>
-        {isLoading ? (
+
+
+    {/*Componente de escribir tareas o  pelis*/}
+    <KeyboardAvoidingView
+    behavior={Platform.OS === "android" ? "padding" : "height"}
+    style={styles.writeTaskWrapper}
+    >
+      <TextInput style={styles.input} placeholder={'Add movie'}/>
+
+      <TouchableOpacity >
+        <View style = {styles.addWrapper}>
+          <Text style={styles.addText}>+</Text>
+        </View>
+      </TouchableOpacity>
+    </KeyboardAvoidingView>
+    
+
+
+
+
+
+
+
+
+
+
+        {/* {isLoading ? (
           <ActivityIndicator />
         ) : (
           <FlatList
@@ -93,7 +152,7 @@ const App = () => {
               </View>
             )}
           />
-        )}
+        )} */}
       </View>
     </View>
   );
