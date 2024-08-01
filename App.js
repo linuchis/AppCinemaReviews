@@ -57,7 +57,7 @@ const App = () => {
   return (
     <View style={{ flex: 1 }}>
       <LinearGradient
-        colors={['#775656','#080808']}
+        colors={['#080808','#775656']}
         style={styles.background}
         start={start}
         end={end}
